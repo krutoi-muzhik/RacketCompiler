@@ -34,7 +34,18 @@
 	  (test-suite
 	   "interp-Lvar-class: interp-program"
 	   (test-case "single integer"
-	     (check-equal? (interp-Lvar (Program '() (Int 8))) 8))))
+	     (check-equal? (interp-Lvar (Program '() (Int 8))) 8))
+		(test-case "single let"
+	     (check-equal?
+	      (interp-Lvar (Program '() (Let 'x (Int 8) (Var 'x)))) 8))
+		(test-case "let with arithmetic"
+	     (check-equal?
+	      (interp-Lvar (Program '() (Let 'x (Int 8)
+	                                  (Prim '+ (list (Var 'x) (Int 2)))))) 10))
+		(test-case "nested let"
+	     (check-equal?
+	      (interp-Lvar (Program '() (Let 'x (Int 1) 
+																		(Let 'x (Int 2) (Var 'x))))) 2))))
 
 
 	(run-tests interp-tests))
